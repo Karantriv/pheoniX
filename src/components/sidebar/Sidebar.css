@@ -1,0 +1,121 @@
+.sidebar{
+    min-height: 100vh;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #f0f4f9;
+    padding: 25px 15px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar img{
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    transition: filter 0.3s ease;
+}
+
+.sidebar .logout-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    transform: rotate(180deg);
+    transition: color 0.3s ease;
+}
+
+.sidebar .menu{
+    display: block;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.sidebar .new-chat{
+    margin-top: 50px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    background-color: #e6eaf1;
+    border-radius: 14px;
+    color: grey;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.sidebar .recent{
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 1.5s;
+}
+.sidebar .recent-title{
+    margin-top: 30px;
+    margin-bottom: 20px;
+
+}
+.sidebar .recent-entry{
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    padding-right: 40px;
+    border-radius: 50px;
+    color: #282828;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.sidebar .recent-entry:hover{
+    background-color: #e2e6eb;
+}
+
+.sidebar .bottom{
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar .bottom-item{
+    padding-right: 10px;
+    cursor: pointer;
+    width: 100%;
+    justify-content: flex-start;
+}
+
+.sidebar .bottom-item p {
+    text-align: left;
+}
+
+/* Dark theme styles for sidebar */
+body.dark-theme .sidebar {
+    background-color: #1e1e1e;
+    color: #f0f0f0;
+}
+
+body.dark-theme .sidebar .new-chat {
+    background-color: #333;
+    color: #e0e0e0;
+}
+
+body.dark-theme .sidebar .recent-entry {
+    color: #e0e0e0;
+}
+
+body.dark-theme .sidebar .recent-entry:hover {
+    background-color: #333;
+}
+
+body.dark-theme .sidebar .logout-icon {
+    color: #e0e0e0;
+}
+
+/* Improve icon visibility in dark mode */
+body.dark-theme .sidebar img {
+    filter: brightness(0) invert(1) opacity(0.8);
+}
+
+@media (max-width:600px){
+    .sidebar{
+        display: none;
+    }
+}
