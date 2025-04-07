@@ -178,7 +178,7 @@ const Main = () => {
     <div className='main'>
       <PhoenixWings />
       <div className="nav">
-        <p>pheoniX</p>
+        <p>phoeniX</p>
         <div className="nav-right">
           <div className="theme-toggle" onClick={toggleTheme}>
             {isDarkTheme ? (

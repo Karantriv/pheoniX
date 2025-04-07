@@ -178,14 +178,14 @@ const LoginSignup = () => {
       <PhoenixWings />
       <div className="login-signup-container">
         <div className="logo-container">
-          <img src={gemini_icon} alt="pheoniX Logo" className="logo" />
+          <img src={gemini_icon} alt="phoeniX Logo" className="logo" />
           <p className="tagline">Your AI Ally</p>
         </div>
 
         <div className={`form-container ${!isLogin ? 'active' : ''}`}>
           {isLogin ? (
             <>
-              <h2>Welcome to pheoniX</h2>
+              <h2>Welcome to phoeniX</h2>
               <p>Please log in to continue.</p>
               <form onSubmit={handleSubmit} className="login-form">
                 <div className="input-group">
@@ -235,7 +235,7 @@ const LoginSignup = () => {
             </>
           ) : (
             <>
-              <h2>Join pheoniX</h2>
+              <h2>Join phoeniX</h2>
               <p>Create an account to get started.</p>
               <form onSubmit={handleSubmit} className="signup-form">
                 <div className="input-group">
