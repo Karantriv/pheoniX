@@ -1,0 +1,431 @@
+:root {
+  --primary-color: #4285f4;
+  --primary-hover-dark: #3367d6;
+  --error-color: #d93025;
+  --success-color: #34a853;
+  --info-color: #4285f4;
+}
+
+/* Dark theme variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #4285f4;
+    --primary-hover-dark: #5294ff;
+    --error-color: #f44336;
+    --success-color: #4caf50;
+    --info-color: #2196f3;
+  }
+}
+
+.profile-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.profile-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform, opacity;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.profile-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+  transition: color 0.2s ease;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+.profile-picture-section {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+}
+
+.profile-picture-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.profile-picture {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #4285f4;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.profile-initials {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #4285f4;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  font-weight: bold;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.picture-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.picture-button {
+  padding: 8px 15px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.picture-button.upload {
+  background-color: var(--primary-color);
+  color: white;
+  margin: 5px 0;
+}
+
+.picture-button.upload:hover:not(:disabled) {
+  background-color: var(--primary-hover-dark);
+  transform: translateY(-2px);
+}
+
+.picture-button.remove {
+  background-color: var(--error-color);
+  color: white;
+  margin: 5px 0;
+}
+
+.picture-button.remove:hover:not(:disabled) {
+  background-color: #fce8e6;
+  transform: translateY(-2px);
+}
+
+.picture-button.test {
+  background-color: #f39c12;
+  color: white;
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+.picture-button.test:hover:not(:disabled) {
+  background-color: #b9770e;
+  transform: translateY(-2px);
+}
+
+.picture-button.direct {
+  background-color: #3498db;
+  color: white;
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .picture-button.upload:hover {
+    background-color: var(--primary-hover-dark);
+  }
+  
+  .picture-button.direct {
+    background-color: #2980b9;
+  }
+  
+  .picture-button.direct:hover {
+    background-color: #1f6aa1;
+  }
+  
+  .picture-button.test {
+    background-color: #d68910;
+  }
+  
+  .picture-button.test:hover {
+    background-color: #b9770e;
+  }
+}
+
+.picture-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+body.dark-theme .picture-button.test {
+  background-color: #e8a317;
+  color: #1a1a1a;
+}
+
+body.dark-theme .picture-button.test:hover:not(:disabled) {
+  background-color: #d49200;
+}
+
+.profile-form {
+  padding: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus {
+  border-color: #4285f4;
+  box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+  outline: none;
+}
+
+.profile-email {
+  margin-bottom: 30px;
+  padding: 12px 15px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  color: #555;
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.cancel-button, .save-button {
+  padding: 12px 24px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.cancel-button {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.cancel-button:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-2px);
+}
+
+.save-button {
+  background-color: #4285f4;
+  color: white;
+}
+
+.save-button:hover:not(:disabled) {
+  background-color: #3367d6;
+  transform: translateY(-2px);
+}
+
+.save-button:disabled {
+  background-color: #a9c7ff;
+  cursor: not-allowed;
+}
+
+/* Dark Theme Styles */
+body.dark-theme .profile-container {
+  background-color: #1a1a1a;
+}
+
+body.dark-theme .profile-card {
+  background-color: #262626;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .profile-header {
+  border-bottom-color: #333;
+}
+
+body.dark-theme .profile-header h2 {
+  color: #f0f0f0;
+}
+
+body.dark-theme .close-button {
+  color: #aaa;
+}
+
+body.dark-theme .close-button:hover {
+  color: #f0f0f0;
+}
+
+body.dark-theme .profile-picture-section {
+  border-bottom-color: #333;
+}
+
+body.dark-theme .profile-picture {
+  border-color: #5c9aff;
+}
+
+body.dark-theme .profile-initials {
+  background-color: #5c9aff;
+  color: #1a1a1a;
+}
+
+body.dark-theme .picture-button.upload {
+  background-color: #5c9aff;
+}
+
+body.dark-theme .picture-button.upload:hover {
+  background-color: #4b7fd9;
+}
+
+body.dark-theme .picture-button.remove {
+  background-color: #333;
+  color: #ff8080;
+}
+
+body.dark-theme .picture-button.remove:hover {
+  background-color: #3d3d3d;
+}
+
+body.dark-theme .form-group label {
+  color: #ccc;
+}
+
+body.dark-theme .form-group input {
+  background-color: #333;
+  border-color: #444;
+  color: #f0f0f0;
+}
+
+body.dark-theme .form-group input:focus {
+  border-color: #5c9aff;
+  box-shadow: 0 0 0 2px rgba(92, 154, 255, 0.2);
+}
+
+body.dark-theme .profile-email {
+  background-color: #333;
+  color: #ccc;
+}
+
+body.dark-theme .cancel-button {
+  background-color: #333;
+  color: #f0f0f0;
+}
+
+body.dark-theme .cancel-button:hover {
+  background-color: #444;
+}
+
+body.dark-theme .save-button {
+  background-color: #5c9aff;
+}
+
+body.dark-theme .save-button:hover:not(:disabled) {
+  background-color: #4b7fd9;
+}
+
+body.dark-theme .save-button:disabled {
+  background-color: #3b5380;
+}
+
+/* Add styles for error message */
+.error-message {
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-size: 14px;
+  text-align: center;
+  width: 100%;
+  max-width: 350px;
+}
+
+.error-message.error {
+  color: #d93025;
+  background-color: #fce8e6;
+}
+
+.error-message.success {
+  color: #0f8c3a;
+  background-color: #e6f4ea;
+}
+
+.error-message.info {
+  color: #1a73e8;
+  background-color: #e8f0fe;
+}
+
+body.dark-theme .error-message.error {
+  background-color: #542b29;
+  color: #ff8080;
+}
+
+body.dark-theme .error-message.success {
+  background-color: #13502d;
+  color: #7deca1;
+}
+
+body.dark-theme .error-message.info {
+  background-color: #1a3d68;
+  color: #8ab4f8;
+}
+
+/* Improve performance by using hardware acceleration where appropriate */
+.picture-button, 
+.cancel-button, 
+.save-button {
+  transition: transform 0.2s ease, background-color 0.2s ease;
+} 

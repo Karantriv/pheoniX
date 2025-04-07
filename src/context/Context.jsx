@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 import runChat, { runMultiModal, resetChat } from "../config/gemini";
 
 export const Context = createContext();
@@ -11,17 +11,48 @@ const ContextProvider = (props) => {
     const [loading, setLoading] = useState(false);
     const [resultData, setResultData] = useState("");
     const [userName, setUserName] = useState("User");
+    const [userProfilePic, setUserProfilePic] = useState(null);
     const [chatHistory, setChatHistory] = useState([]);
     const [currentChat, setCurrentChat] = useState([]);
+    const [activeChat, setActiveChat] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
     const [isDarkTheme, setIsDarkTheme] = useState(false);
 
-    // Load theme preference from localStorage on initial load
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            setIsDarkTheme(savedTheme === 'dark');
+    // Get user initials from their name - memoized for performance
+    const getUserInitials = useCallback(() => {
+        if (!userName || userName === "User") return "U";
+        
+        const names = userName.trim().split(' ');
+        if (names.length === 1) {
+            return names[0].charAt(0).toUpperCase();
+        } else {
+            return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
         }
+    }, [userName]);
+
+    // Load saved preferences from localStorage only once on initial load
+    useEffect(() => {
+        const loadPreferences = () => {
+            // Load theme preference
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                setIsDarkTheme(savedTheme === 'dark');
+            }
+            
+            // Load user name
+            const savedUserName = localStorage.getItem('userName');
+            if (savedUserName) {
+                setUserName(savedUserName);
+            }
+
+            // Load user profile pic
+            const savedProfilePic = localStorage.getItem('userProfilePic');
+            if (savedProfilePic) {
+                setUserProfilePic(savedProfilePic);
+            }
+        };
+
+        loadPreferences();
     }, []);
 
     // Apply theme whenever isDarkTheme changes
@@ -35,33 +66,83 @@ const ContextProvider = (props) => {
         localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light');
     }, [isDarkTheme]);
 
-    const toggleTheme = () => {
-        setIsDarkTheme(prev => !prev);
-    };
+    const toggleTheme = useCallback(() => {
+        setIsDarkTheme(prev => {
+            const newTheme = !prev;
+            // Update body class for theme-specific styles
+            if (newTheme) {
+                document.body.classList.add('dark-theme');
+            } else {
+                document.body.classList.remove('dark-theme');
+            }
+            // Save theme preference
+            localStorage.setItem('theme', newTheme ? 'dark' : 'light');
+            return newTheme;
+        });
+    }, []);
 
-    const delayPara = (index, nextWord) => {
+    const delayPara = useCallback((index, nextWord) => {
         setTimeout(function() {
             setResultData(prev => prev + nextWord);
         }, 75 * index);
-    };
+    }, []);
 
-    const newChat = () => {
+    const newChat = useCallback(() => {
         setLoading(false);
         setShowResult(false);
+        
+        // Create a new chat entry if there are messages in the current chat
+        if (currentChat.length > 0) {
+            // Add the current chat to chat history if it's not empty
+            const chatId = Date.now().toString();
+            setChatHistory(prev => [
+                ...prev, 
+                {
+                    id: chatId,
+                    title: currentChat[0]?.content?.slice(0, 30) || "New Chat",
+                    messages: [...currentChat]
+                }
+            ]);
+            
+            // Update the active chat to the newly created one
+            setActiveChat(chatId);
+        }
+        
+        // Reset the current chat for the new conversation
         setCurrentChat([]);
         setSelectedImage(null);
         resetChat();
-    };
+    }, [currentChat]);
 
-    const handleImageUpload = (file) => {
+    // Load a chat from history
+    const loadChat = useCallback((chatId) => {
+        const chat = chatHistory.find(chat => chat.id === chatId);
+        if (chat) {
+            setCurrentChat(chat.messages);
+            setActiveChat(chatId);
+            setShowResult(true);
+        }
+    }, [chatHistory]);
+
+    const handleImageUpload = useCallback((file) => {
         if (file) {
             setSelectedImage(file);
         }
-    };
+    }, []);
 
-    const removeImage = () => {
+    const removeImage = useCallback(() => {
         setSelectedImage(null);
-    };
+    }, []);
+
+    const updateUserProfilePic = useCallback((url) => {
+        setUserProfilePic(url);
+        // Also save to localStorage for persistence
+        if (url) {
+            localStorage.setItem('userProfilePic', url);
+        } else {
+            localStorage.removeItem('userProfilePic');
+        }
+    }, []);
 
     const onSent = async(prompt) => {
         setResultData("");
@@ -71,9 +152,16 @@ const ContextProvider = (props) => {
         let userPrompt = prompt;
         if (prompt === undefined) {
             userPrompt = input;
-            setPrevPrompts(prev => [...prev, input]);
+            
+            // Store the prompt in prevPrompts only if it's a new chat or the first message
+            if (currentChat.length === 0) {
+                setPrevPrompts(prev => [...prev, input]);
+            }
         } else {
-            setPrevPrompts(prev => [...prev, prompt]);
+            // Store the prompt in prevPrompts only if it's a new chat or the first message
+            if (currentChat.length === 0) {
+                setPrevPrompts(prev => [...prev, prompt]);
+            }
         }
         
         // Skip empty prompts
@@ -111,7 +199,8 @@ const ContextProvider = (props) => {
             }
             
             // Add the AI response to current chat
-            setCurrentChat(prev => [...prev, { role: 'model', content: response }]);
+            const updatedChatWithResponse = [...updatedChat, { role: 'model', content: response }];
+            setCurrentChat(updatedChatWithResponse);
             
             // Format the response
             let responseArray = response.split("**");
@@ -152,9 +241,15 @@ const ContextProvider = (props) => {
         input,
         setInput,
         newChat,
+        loadChat,
         userName,
         setUserName,
+        getUserInitials,
+        userProfilePic,
+        updateUserProfilePic,
         currentChat,
+        chatHistory,
+        activeChat,
         handleImageUpload,
         selectedImage,
         removeImage,

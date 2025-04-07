@@ -3,6 +3,7 @@
     min-height: 100vh;
     padding-bottom: 15vh;
     position: relative;
+    overflow: hidden;
 }
  .main .nav{
     display: flex;
@@ -37,6 +38,50 @@
 .main .nav img{
     width: 40px;
     border-radius: 50%;
+}
+
+.user-profile {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.user-profile:hover {
+    transform: scale(1.1);
+}
+
+.user-profile-pic {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-initials {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #4285f4;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.user-initials:hover {
+    transform: scale(1.1);
+}
+
+body.dark-theme .user-initials {
+    background-color: #5c9aff;
+    color: #1a1a1a;
 }
 
 .main-container{
@@ -415,12 +460,15 @@ body.dark-theme .bottom-info {
   color: #aaa;
 }
 
-/* Fix icons visibility in dark mode */
-body.dark-theme .card img {
-  background-color: #444;
-  filter: brightness(0) invert(1) opacity(0.8);
+/* Fix card icons in dark mode with a simpler, more effective approach */
+body.dark-theme .main .cards .card img {
+  background-color: #ffffff;
+  filter: none;
+  border: none;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
 }
 
+/* Keep other dark theme styles intact */
 body.dark-theme .search-box img {
   filter: brightness(0) invert(1) opacity(0.8);
 }
@@ -450,4 +498,10 @@ body.dark-theme .remove-image-btn {
 
 body.dark-theme .theme-icon {
   opacity: 1;
+}
+
+/* Phoenix Wings Visibility Enhancements */
+body.dark-theme .phoenix-wings-container {
+  /* Ensure visibility in dark mode */
+  filter: contrast(1.2) brightness(1.1);
 }

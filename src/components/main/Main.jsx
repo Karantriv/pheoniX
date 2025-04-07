@@ -1,13 +1,14 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import './Main.css';
 import { assets } from '../../assets/assets';
 import { Context } from '../../context/Context';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../firebase/AuthContext';
+import PhoenixWings from './PhoenixWings';
 
 const Main = () => {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { currentUser, logout, userProfilePic: authProfilePic } = useAuth();
   const fileInputRef = useRef(null);
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
@@ -20,6 +21,8 @@ const Main = () => {
     setInput, 
     input,
     userName,
+    getUserInitials,
+    userProfilePic: contextProfilePic,
     currentChat,
     newChat,
     handleImageUpload,
@@ -28,6 +31,20 @@ const Main = () => {
     isDarkTheme,
     toggleTheme
   } = useContext(Context);
+
+  // Combine profile pic from both sources, prioritizing auth
+  const [profilePic, setProfilePic] = useState(null);
+
+  useEffect(() => {
+    // Use auth profile pic first, fall back to context profile pic
+    if (authProfilePic) {
+      setProfilePic(authProfilePic);
+    } else if (contextProfilePic) {
+      setProfilePic(contextProfilePic);
+    } else {
+      setProfilePic(null);
+    }
+  }, [authProfilePic, contextProfilePic]);
 
   const handleLogout = async () => {
     try {
@@ -50,11 +67,15 @@ const Main = () => {
     const file = e.target.files[0];
     if (file && (file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif')) {
       handleImageUpload(file);
-    } else {
+    } else if (file) {
       alert('Please select a valid image file (JPEG, PNG, or GIF)');
     }
     // Clear the input so the same file can be selected again
     e.target.value = '';
+  };
+
+  const handleProfileClick = () => {
+    navigate('/profile');
   };
 
   const toggleListening = () => {
@@ -155,8 +176,9 @@ const Main = () => {
 
   return (
     <div className='main'>
+      <PhoenixWings />
       <div className="nav">
-        <p>Gemini</p>
+        <p>pheoniX</p>
         <div className="nav-right">
           <div className="theme-toggle" onClick={toggleTheme}>
             {isDarkTheme ? (
@@ -165,7 +187,20 @@ const Main = () => {
               <span className="theme-icon">🌙</span>
             )}
           </div>
-          <img src={assets.user_icon} alt="" />
+          {profilePic ? (
+            <div className="user-profile" onClick={handleProfileClick}>
+              <img 
+                src={profilePic} 
+                alt={userName} 
+                className="user-profile-pic" 
+                title={userName} 
+              />
+            </div>
+          ) : (
+            <div className="user-initials" onClick={handleProfileClick} title={userName}>
+              {getUserInitials()}
+            </div>
+          )}
         </div>
       </div>
       <div className="main-container">
@@ -173,8 +208,8 @@ const Main = () => {
         {!showResult 
         ?<>
         <div className="greet">
-          <p><span>Hello, {userName}.</span></p>
-          <p>How can I help you today?</p>
+          <p><span>Relive, {userName}.</span></p>
+          <p>Your AI Ally</p>
         </div>
         <div className="cards">
         <div className="card" onClick={() => handleCardClick("Suggest beautiful places to see on an upcoming road trip")}>
@@ -200,7 +235,15 @@ const Main = () => {
         : <div className='result'>
           {currentChat.map((message, index) => (
             <div key={index} className={message.role === 'user' ? "result-title" : "result-data"}>
-              <img src={message.role === 'user' ? assets.user_icon : assets.gemini_icon} alt="" />
+              {message.role === 'user' ? (
+                profilePic ? (
+                  <img src={profilePic} alt={userName} className="user-profile-pic" />
+                ) : (
+                  <div className="user-initials">{getUserInitials()}</div>
+                )
+              ) : (
+                <img src={assets.gemini_icon} alt="" />
+              )}
               <div className="message-content">
                 {message.role === 'user' ? (
                   <>
@@ -269,7 +312,7 @@ const Main = () => {
                     type="file" 
                     ref={fileInputRef} 
                     style={{ display: 'none' }} 
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/gif"
                     onChange={handleFileChange}
                   />
                   <img 
@@ -290,8 +333,7 @@ const Main = () => {
             </div>
           </div>
           <p className="bottom-info">
-            Gemini may display inaccurate info, including about people, so double-check its responses. Your privacy and Gemini Apps
-          </p>
+          Phoenix is powerful, but accuracy isn't guaranteed—double-check responses!        <br/> by~ Karan Trivedi</p>
         </div>
       </div>
     </div>

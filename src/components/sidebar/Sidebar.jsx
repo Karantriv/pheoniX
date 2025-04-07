@@ -6,7 +6,7 @@ import { useAuth } from '../../firebase/AuthContext'
 
 const Sidebar = () => {
     const [extended,setExtended] = useState(false)
-    const {onSent, prevPrompts, setRecentPrompt,newChat} = useContext(Context)
+    const {onSent, prevPrompts, setRecentPrompt, newChat, chatHistory, loadChat, activeChat} = useContext(Context)
     const { logout } = useAuth()
      
     const loadPrompt = async(prompt) =>{
@@ -30,18 +30,25 @@ const Sidebar = () => {
                     <img src={assets.plus_icon} alt="" />
                     {extended?<p>New Chat</p>:null}
                 </div>
-                {extended?
-                <div className="recent">
-                    <p className="recent-title">Recent</p>
-                    {prevPrompts.map((item,index)=>{
-                        return (
-                            <div onClick = {()=>loadPrompt(item)} className="recent-entry">
-                                <img src={assets.message_icon} alt="" />
-                                <p>{item.slice(0,18)}...</p>
+                {extended && (
+                    <>
+                        {chatHistory.length > 0 && (
+                            <div className="recent">
+                                <p className="recent-title">Chat History</p>
+                                {chatHistory.map((chat) => (
+                                    <div 
+                                        key={chat.id} 
+                                        onClick={() => loadChat(chat.id)} 
+                                        className={`recent-entry ${activeChat === chat.id ? 'active-chat' : ''}`}
+                                    >
+                                        <img src={assets.message_icon} alt="" />
+                                        <p>{chat.title.slice(0, 18)}...</p>
+                                    </div>
+                                ))}
                             </div>
-                        )
-                    })}
-                </div>:null}       
+                        )}
+                    </>
+                )}     
             </div> 
             <div className="bottom">
                 <div className="bottom-item recent-entry">

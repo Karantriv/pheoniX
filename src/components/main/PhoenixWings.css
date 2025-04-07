@@ -1,0 +1,156 @@
+.phoenix-wings-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.phoenix-wing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.1;
+  filter: blur(2px);
+  animation: wing-pulse 8s infinite alternate ease-in-out;
+}
+
+.wing-left {
+  background-image: radial-gradient(
+    ellipse at right center,
+    transparent 0%,
+    transparent 30%,
+    rgba(255, 140, 0, 0.2) 40%,
+    rgba(255, 100, 0, 0.3) 50%,
+    rgba(255, 50, 0, 0.4) 70%,
+    transparent 100%
+  );
+  transform-origin: right center;
+  transform: translate(-40%, -50%) rotate(-20deg) scaleX(-1);
+  animation: wing-left-movement 10s infinite alternate ease-in-out;
+}
+
+.wing-right {
+  background-image: radial-gradient(
+    ellipse at left center,
+    transparent 0%,
+    transparent 30%,
+    rgba(255, 140, 0, 0.2) 40%,
+    rgba(255, 100, 0, 0.3) 50%,
+    rgba(255, 50, 0, 0.4) 70%,
+    transparent 100%
+  );
+  transform-origin: left center;
+  transform: translate(-60%, -50%) rotate(20deg);
+  animation: wing-right-movement 10s infinite alternate ease-in-out;
+}
+
+.phoenix-ember {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background-color: #ff6d00;
+  border-radius: 50%;
+  opacity: 0;
+  filter: blur(1px);
+  box-shadow: 0 0 10px #ff6d00, 0 0 20px #ff9500;
+}
+
+@keyframes wing-left-movement {
+  0% {
+    transform: translate(-40%, -50%) rotate(-20deg) scaleX(-1);
+    opacity: 0.1;
+  }
+  50% {
+    transform: translate(-43%, -50%) rotate(-15deg) scaleX(-1) scaleY(1.05);
+    opacity: 0.15;
+  }
+  100% {
+    transform: translate(-40%, -50%) rotate(-25deg) scaleX(-1);
+    opacity: 0.1;
+  }
+}
+
+@keyframes wing-right-movement {
+  0% {
+    transform: translate(-60%, -50%) rotate(20deg);
+    opacity: 0.1;
+  }
+  50% {
+    transform: translate(-57%, -50%) rotate(15deg) scaleY(1.05);
+    opacity: 0.15;
+  }
+  100% {
+    transform: translate(-60%, -50%) rotate(25deg);
+    opacity: 0.1;
+  }
+}
+
+@keyframes wing-pulse {
+  0% {
+    filter: blur(2px);
+  }
+  50% {
+    filter: blur(3px);
+  }
+  100% {
+    filter: blur(2px);
+  }
+}
+
+@keyframes ember-float {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-100px) scale(0.3);
+    opacity: 0;
+  }
+}
+
+/* Dark theme adjustments */
+body.dark-theme .phoenix-wings-container {
+  z-index: 0;
+}
+
+body.dark-theme .phoenix-wing {
+  opacity: 0.2;
+}
+
+body.dark-theme .wing-left {
+  background-image: radial-gradient(
+    ellipse at right center,
+    transparent 0%,
+    transparent 30%,
+    rgba(255, 140, 0, 0.25) 40%,
+    rgba(255, 100, 0, 0.35) 50%,
+    rgba(255, 50, 0, 0.45) 70%,
+    transparent 100%
+  );
+}
+
+body.dark-theme .wing-right {
+  background-image: radial-gradient(
+    ellipse at left center,
+    transparent 0%,
+    transparent 30%,
+    rgba(255, 140, 0, 0.25) 40%,
+    rgba(255, 100, 0, 0.35) 50%,
+    rgba(255, 50, 0, 0.45) 70%,
+    transparent 100%
+  );
+}
+
+body.dark-theme .phoenix-ember {
+  background-color: #ff9d00;
+  box-shadow: 0 0 10px #ff6d00, 0 0 20px #ff9500, 0 0 30px #ffb700;
+} 

@@ -70,6 +70,16 @@
     background-color: #e2e6eb;
 }
 
+.sidebar .active-chat {
+    background-color: #e2e6eb;
+    font-weight: 600;
+}
+
+body.dark-theme .sidebar .active-chat {
+    background-color: #333;
+    font-weight: 600;
+}
+
 .sidebar .bottom{
     display: flex;
     flex-direction: column;

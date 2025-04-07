@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../firebase/AuthContext";
 import { Context } from "../../context/Context";
+import PhoenixWings from "../../components/main/PhoenixWings";
 import "./LoginSignup.css";
 import gemini_icon from "../../assets/gemini_icon.png";
 
@@ -108,10 +109,16 @@ const LoginSignup = () => {
       
       if (isLogin) {
         await login(email, password);
-        setUserName(name || "User");
+        // Set the user name from the form or saved credentials
+        const displayName = name || (savedCredentials[email]?.name) || email.split('@')[0] || "User";
+        setUserName(displayName);
+        // Also save the name to localStorage for persistence
+        localStorage.setItem("userName", displayName);
       } else {
         await signup(email, password);
         setUserName(name || "User");
+        // Save the name to localStorage for persistence
+        localStorage.setItem("userName", name || "User");
       }
       
       navigate("/");
@@ -128,8 +135,13 @@ const LoginSignup = () => {
     try {
       setLoading(true);
       setErrors({});
-      await loginWithGoogle();
-      setUserName(name || "User");
+      const result = await loginWithGoogle();
+      
+      // Get the name from the Google profile, or use email if no name
+      const displayName = result?.user?.displayName || result?.user?.email?.split('@')[0] || "User";
+      setUserName(displayName);
+      localStorage.setItem("userName", displayName);
+      
       navigate("/");
     } catch (error) {
       setErrors({
@@ -144,8 +156,13 @@ const LoginSignup = () => {
     try {
       setLoading(true);
       setErrors({});
-      await loginWithGithub();
-      setUserName(name || "User");
+      const result = await loginWithGithub();
+      
+      // Get the name from the GitHub profile, or use username if no name
+      const displayName = result?.user?.displayName || result?.user?.reloadUserInfo?.screenName || "User";
+      setUserName(displayName);
+      localStorage.setItem("userName", displayName);
+      
       navigate("/");
     } catch (error) {
       setErrors({
@@ -158,16 +175,17 @@ const LoginSignup = () => {
 
   return (
     <div className="box">
+      <PhoenixWings />
       <div className="login-signup-container">
         <div className="logo-container">
-          <img src={gemini_icon} alt="Gemini Logo" className="logo" />
-          <p className="tagline">Your AI-powered assistant</p>
+          <img src={gemini_icon} alt="pheoniX Logo" className="logo" />
+          <p className="tagline">Your AI Ally</p>
         </div>
 
         <div className={`form-container ${!isLogin ? 'active' : ''}`}>
           {isLogin ? (
             <>
-              <h2>Welcome back!</h2>
+              <h2>Welcome to pheoniX</h2>
               <p>Please log in to continue.</p>
               <form onSubmit={handleSubmit} className="login-form">
                 <div className="input-group">
@@ -217,8 +235,8 @@ const LoginSignup = () => {
             </>
           ) : (
             <>
-              <h2>Create an account</h2>
-              <p>Join us to get started.</p>
+              <h2>Join pheoniX</h2>
+              <p>Create an account to get started.</p>
               <form onSubmit={handleSubmit} className="signup-form">
                 <div className="input-group">
                   <input
@@ -253,6 +271,7 @@ const LoginSignup = () => {
                 <div className="input-group">
                   <div className="phone-input">
                     <select
+                    defaultValue={+91}
                       value={countryCode}
                       onChange={(e) => setCountryCode(e.target.value)}
                     >
@@ -261,7 +280,7 @@ const LoginSignup = () => {
                     </select>
                     <input
                       type="text"
-                      placeholder="Enter your phone number"
+                      placeholder="Enter your number"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       className={errors.phone ? "error" : ""}

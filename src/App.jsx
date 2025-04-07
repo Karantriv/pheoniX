@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './firebase/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginSignup from "./components/login-signup/LoginSignup";
+import Profile from "./components/profile/Profile";
 import "./App.css";
 
 const PrivateRoute = ({ children }) => {
@@ -25,6 +26,11 @@ const App = () => {
                 <Sidebar />
                 <Main />
               </div>
+            </PrivateRoute>
+          }/>
+          <Route path="/profile" element={
+            <PrivateRoute>
+              <Profile />
             </PrivateRoute>
           }/>
         </Routes>
