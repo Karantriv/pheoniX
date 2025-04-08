@@ -5,6 +5,7 @@ import { Context } from '../../context/Context';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../firebase/AuthContext';
 import PhoenixWings from './PhoenixWings';
+import phoenixLogo from '../../assets/gemini_icon.png';
 
 const Main = () => {
   const navigate = useNavigate();
@@ -12,6 +13,9 @@ const Main = () => {
   const fileInputRef = useRef(null);
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
+  const [logoSpinning, setLogoSpinning] = useState(false);
+  const [showWingsFlash, setShowWingsFlash] = useState(false);
+  
   const { 
     onSent, 
     recentPrompt, 
@@ -45,6 +49,24 @@ const Main = () => {
       setProfilePic(null);
     }
   }, [authProfilePic, contextProfilePic]);
+
+  const handleLogoClick = () => {
+    if (logoSpinning) return; // Prevent multiple clicks
+    
+    setLogoSpinning(true);
+    
+    // After logo spinning completes, show wings flash
+    setTimeout(() => {
+      setShowWingsFlash(true);
+      
+      // After wings animation completes, redirect to new chat
+      setTimeout(() => {
+        newChat();
+        setLogoSpinning(false);
+        setShowWingsFlash(false);
+      }, 800);
+    }, 800);
+  };
 
   const handleLogout = async () => {
     try {
@@ -177,8 +199,18 @@ const Main = () => {
   return (
     <div className='main'>
       <PhoenixWings />
+      {showWingsFlash && <div 
+        className="logo-wings-flash active"
+      ></div>}
       <div className="nav">
-        <p>phoeniX</p>
+        <div className="logo-container" onClick={handleLogoClick}>
+          <img 
+            src={phoenixLogo} 
+            alt="Phoenix Logo" 
+            className={`nav-logo ${logoSpinning ? 'spinning' : ''}`} 
+          />
+          <p>phoeniX</p>
+        </div>
         <div className="nav-right">
           <div className="theme-toggle" onClick={toggleTheme}>
             {isDarkTheme ? (
@@ -242,7 +274,7 @@ const Main = () => {
                   <div className="user-initials">{getUserInitials()}</div>
                 )
               ) : (
-                <img src={assets.gemini_icon} alt="" />
+                <img src={assets.gemini_icon} alt="Phoenix" />
               )}
               <div className="message-content">
                 {message.role === 'user' ? (

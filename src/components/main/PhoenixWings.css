@@ -13,50 +13,76 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.1;
+  opacity: 0.15;
   filter: blur(2px);
   animation: wing-pulse 8s infinite alternate ease-in-out;
+  mix-blend-mode: screen;
 }
 
 .wing-left {
-  background-image: radial-gradient(
-    ellipse at right center,
-    transparent 0%,
-    transparent 30%,
-    rgba(255, 140, 0, 0.2) 40%,
-    rgba(255, 100, 0, 0.3) 50%,
-    rgba(255, 50, 0, 0.4) 70%,
-    transparent 100%
-  );
+  background-image: 
+    radial-gradient(
+      ellipse at right center,
+      transparent 0%,
+      transparent 20%,
+      rgba(255, 200, 0, 0.1) 30%,
+      rgba(255, 140, 0, 0.2) 40%,
+      rgba(255, 100, 0, 0.3) 50%,
+      rgba(255, 50, 0, 0.4) 60%,
+      rgba(255, 0, 0, 0.3) 70%,
+      transparent 100%
+    ),
+    repeating-radial-gradient(
+      ellipse at right center,
+      rgba(255, 120, 0, 0.1) 0%,
+      rgba(255, 60, 0, 0.15) 15%,
+      rgba(255, 30, 0, 0.1) 20%,
+      rgba(255, 0, 0, 0.05) 30%,
+      rgba(255, 120, 0, 0.1) 40%
+    );
   transform-origin: right center;
   transform: translate(-40%, -50%) rotate(-20deg) scaleX(-1);
-  animation: wing-left-movement 10s infinite alternate ease-in-out;
+  animation: 
+    wing-left-movement 10s infinite alternate ease-in-out,
+    wing-fire-flicker 4s infinite alternate ease-in-out;
 }
 
 .wing-right {
-  background-image: radial-gradient(
-    ellipse at left center,
-    transparent 0%,
-    transparent 30%,
-    rgba(255, 140, 0, 0.2) 40%,
-    rgba(255, 100, 0, 0.3) 50%,
-    rgba(255, 50, 0, 0.4) 70%,
-    transparent 100%
-  );
+  background-image: 
+    radial-gradient(
+      ellipse at left center,
+      transparent 0%,
+      transparent 20%,
+      rgba(255, 200, 0, 0.1) 30%,
+      rgba(255, 140, 0, 0.2) 40%,
+      rgba(255, 100, 0, 0.3) 50%,
+      rgba(255, 50, 0, 0.4) 60%,
+      rgba(255, 0, 0, 0.3) 70%,
+      transparent 100%
+    ),
+    repeating-radial-gradient(
+      ellipse at left center,
+      rgba(255, 120, 0, 0.1) 0%,
+      rgba(255, 60, 0, 0.15) 15%,
+      rgba(255, 30, 0, 0.1) 20%,
+      rgba(255, 0, 0, 0.05) 30%,
+      rgba(255, 120, 0, 0.1) 40%
+    );
   transform-origin: left center;
   transform: translate(-60%, -50%) rotate(20deg);
-  animation: wing-right-movement 10s infinite alternate ease-in-out;
+  animation: 
+    wing-right-movement 10s infinite alternate ease-in-out,
+    wing-fire-flicker 3.5s infinite alternate ease-in-out;
 }
 
 .phoenix-ember {
   position: absolute;
-  width: 4px;
-  height: 4px;
+  width: 3px;
+  height: 3px;
   background-color: #ff6d00;
   border-radius: 50%;
   opacity: 0;
@@ -64,33 +90,83 @@
   box-shadow: 0 0 10px #ff6d00, 0 0 20px #ff9500;
 }
 
+/* Additional ember types for more realistic fire effect */
+.phoenix-ember:nth-child(3n) {
+  background-color: #ffcc00;
+  width: 2px;
+  height: 2px;
+}
+
+.phoenix-ember:nth-child(3n+1) {
+  background-color: #ff3300;
+  width: 4px;
+  height: 4px;
+  box-shadow: 0 0 15px #ff3300, 0 0 25px #ff6600;
+}
+
+/* Wing movement animations */
 @keyframes wing-left-movement {
   0% {
     transform: translate(-40%, -50%) rotate(-20deg) scaleX(-1);
-    opacity: 0.1;
+    opacity: 0.12;
+  }
+  25% {
+    transform: translate(-41%, -51%) rotate(-18deg) scaleX(-1) scaleY(1.02);
+    opacity: 0.14;
   }
   50% {
     transform: translate(-43%, -50%) rotate(-15deg) scaleX(-1) scaleY(1.05);
-    opacity: 0.15;
+    opacity: 0.16;
+  }
+  75% {
+    transform: translate(-42%, -49%) rotate(-22deg) scaleX(-1) scaleY(1.03);
+    opacity: 0.14;
   }
   100% {
     transform: translate(-40%, -50%) rotate(-25deg) scaleX(-1);
-    opacity: 0.1;
+    opacity: 0.12;
   }
 }
 
 @keyframes wing-right-movement {
   0% {
     transform: translate(-60%, -50%) rotate(20deg);
-    opacity: 0.1;
+    opacity: 0.12;
+  }
+  25% {
+    transform: translate(-59%, -51%) rotate(18deg) scaleY(1.02);
+    opacity: 0.14;
   }
   50% {
     transform: translate(-57%, -50%) rotate(15deg) scaleY(1.05);
-    opacity: 0.15;
+    opacity: 0.16;
+  }
+  75% {
+    transform: translate(-58%, -49%) rotate(22deg) scaleY(1.03);
+    opacity: 0.14;
   }
   100% {
     transform: translate(-60%, -50%) rotate(25deg);
-    opacity: 0.1;
+    opacity: 0.12;
+  }
+}
+
+/* Fire flicker effect for more realistic flames */
+@keyframes wing-fire-flicker {
+  0% {
+    filter: blur(2px) brightness(1);
+  }
+  25% {
+    filter: blur(2.2px) brightness(1.05);
+  }
+  50% {
+    filter: blur(2.5px) brightness(1.1);
+  }
+  75% {
+    filter: blur(2.3px) brightness(1.05);
+  }
+  100% {
+    filter: blur(2px) brightness(1);
   }
 }
 
@@ -98,7 +174,10 @@
   0% {
     filter: blur(2px);
   }
-  50% {
+  33% {
+    filter: blur(2.5px);
+  }
+  66% {
     filter: blur(3px);
   }
   100% {
@@ -108,11 +187,19 @@
 
 @keyframes ember-float {
   0% {
-    transform: translateY(0) scale(1);
+    transform: translateY(0) scale(1) rotate(0deg);
     opacity: 0.7;
   }
+  33% {
+    transform: translateY(-33px) scale(0.8) rotate(15deg);
+    opacity: 0.6;
+  }
+  66% {
+    transform: translateY(-66px) scale(0.6) rotate(30deg);
+    opacity: 0.4;
+  }
   100% {
-    transform: translateY(-100px) scale(0.3);
+    transform: translateY(-100px) scale(0.3) rotate(45deg);
     opacity: 0;
   }
 }
@@ -123,31 +210,53 @@ body.dark-theme .phoenix-wings-container {
 }
 
 body.dark-theme .phoenix-wing {
-  opacity: 0.2;
+  opacity: 0.25;
 }
 
 body.dark-theme .wing-left {
-  background-image: radial-gradient(
-    ellipse at right center,
-    transparent 0%,
-    transparent 30%,
-    rgba(255, 140, 0, 0.25) 40%,
-    rgba(255, 100, 0, 0.35) 50%,
-    rgba(255, 50, 0, 0.45) 70%,
-    transparent 100%
-  );
+  background-image: 
+    radial-gradient(
+      ellipse at right center,
+      transparent 0%,
+      transparent 20%,
+      rgba(255, 200, 0, 0.15) 30%,
+      rgba(255, 140, 0, 0.25) 40%,
+      rgba(255, 100, 0, 0.35) 50%,
+      rgba(255, 50, 0, 0.45) 60%,
+      rgba(255, 0, 0, 0.35) 70%,
+      transparent 100%
+    ),
+    repeating-radial-gradient(
+      ellipse at right center,
+      rgba(255, 120, 0, 0.15) 0%,
+      rgba(255, 60, 0, 0.2) 15%,
+      rgba(255, 30, 0, 0.15) 20%,
+      rgba(255, 0, 0, 0.1) 30%,
+      rgba(255, 120, 0, 0.15) 40%
+    );
 }
 
 body.dark-theme .wing-right {
-  background-image: radial-gradient(
-    ellipse at left center,
-    transparent 0%,
-    transparent 30%,
-    rgba(255, 140, 0, 0.25) 40%,
-    rgba(255, 100, 0, 0.35) 50%,
-    rgba(255, 50, 0, 0.45) 70%,
-    transparent 100%
-  );
+  background-image: 
+    radial-gradient(
+      ellipse at left center,
+      transparent 0%,
+      transparent 20%,
+      rgba(255, 200, 0, 0.15) 30%,
+      rgba(255, 140, 0, 0.25) 40%,
+      rgba(255, 100, 0, 0.35) 50%,
+      rgba(255, 50, 0, 0.45) 60%,
+      rgba(255, 0, 0, 0.35) 70%,
+      transparent 100%
+    ),
+    repeating-radial-gradient(
+      ellipse at left center,
+      rgba(255, 120, 0, 0.15) 0%,
+      rgba(255, 60, 0, 0.2) 15%,
+      rgba(255, 30, 0, 0.15) 20%,
+      rgba(255, 0, 0, 0.1) 30%,
+      rgba(255, 120, 0, 0.15) 40%
+    );
 }
 
 body.dark-theme .phoenix-ember {

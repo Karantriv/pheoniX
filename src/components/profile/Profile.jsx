@@ -9,7 +9,7 @@ import { assets } from '../../assets/assets';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { currentUser, uploadProfilePicture, userProfilePic } = useAuth();
+  const { currentUser, uploadProfilePicture, userProfilePic, signOut } = useAuth();
   const { userName, setUserName, updateUserProfilePic, getUserInitials } = useContext(Context);
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState(userName);
@@ -19,6 +19,7 @@ const Profile = () => {
   const [isTestingStorage, setIsTestingStorage] = useState(false);
   const [isDirectUpload, setIsDirectUpload] = useState(false);
   const fileInputRef = useRef(null);
+  const profileCardRef = useRef(null);
 
   useEffect(() => {
     // Set preview from existing profile pic if available
@@ -26,6 +27,13 @@ const Profile = () => {
       setPreviewUrl(userProfilePic);
     }
   }, [userProfilePic]);
+
+  const handleClickOutside = (e) => {
+    // If click is on the background (not on the card itself)
+    if (profileCardRef.current && !profileCardRef.current.contains(e.target)) {
+      navigate('/home');
+    }
+  };
 
   const handleNameChange = (e) => {
     setName(e.target.value);
@@ -176,7 +184,7 @@ const Profile = () => {
       
       // Navigate back to home with a slight delay to show success message
       setTimeout(() => {
-        navigate('/');
+        navigate('/home');
       }, 1500);
       
     } catch (error) {
@@ -188,12 +196,23 @@ const Profile = () => {
   };
 
   const handleCancel = () => {
-    navigate('/');
+    navigate('/home');
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      // Redirect to landing page
+      navigate('/');
+    } catch (error) {
+      console.error("Error signing out:", error);
+      setErrorMessage({ text: "Failed to sign out. Please try again.", type: "error" });
+    }
   };
 
   return (
-    <div className="profile-container">
-      <div className="profile-card">
+    <div className="profile-container" onClick={handleClickOutside}>
+      <div className="profile-card" ref={profileCardRef}>
         <div className="profile-header">
           <h2>Edit Profile</h2>
           <button className="close-button" onClick={handleCancel}>×</button>
@@ -267,19 +286,28 @@ const Profile = () => {
 
           <div className="profile-actions">
             <button 
-              className="cancel-button" 
-              onClick={handleCancel}
+              className="sign-out-button" 
+              onClick={handleSignOut}
               disabled={isLoading || isTestingStorage || isDirectUpload}
             >
-              Cancel
+              Sign Out
             </button>
-            <button
-              className="save-button"
-              onClick={handleSave}
-              disabled={isLoading || isTestingStorage || isDirectUpload}
-            >
-              {isLoading ? 'Saving...' : 'Save Changes'}
-            </button>
+            <div className="right-actions">
+              <button 
+                className="cancel-button" 
+                onClick={handleCancel}
+                disabled={isLoading || isTestingStorage || isDirectUpload}
+              >
+                Cancel
+              </button>
+              <button
+                className="save-button"
+                onClick={handleSave}
+                disabled={isLoading || isTestingStorage || isDirectUpload}
+              >
+                {isLoading ? 'Saving...' : 'Save Changes'}
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect, useCallback } from "react";
 import runChat, { runMultiModal, resetChat } from "../config/gemini";
+import { getCustomResponse } from "../config/customResponses";
 
 export const Context = createContext();
 
@@ -67,18 +68,7 @@ const ContextProvider = (props) => {
     }, [isDarkTheme]);
 
     const toggleTheme = useCallback(() => {
-        setIsDarkTheme(prev => {
-            const newTheme = !prev;
-            // Update body class for theme-specific styles
-            if (newTheme) {
-                document.body.classList.add('dark-theme');
-            } else {
-                document.body.classList.remove('dark-theme');
-            }
-            // Save theme preference
-            localStorage.setItem('theme', newTheme ? 'dark' : 'light');
-            return newTheme;
-        });
+        setIsDarkTheme(prev => !prev);
     }, []);
 
     const delayPara = useCallback((index, nextWord) => {
@@ -189,7 +179,14 @@ const ContextProvider = (props) => {
         try {
             let response;
             
-            if (selectedImage) {
+            // Check for custom responses first if there's no image
+            const customResponse = !selectedImage ? getCustomResponse(userPrompt, { userName }) : null;
+            
+            if (customResponse) {
+                // Use custom response
+                response = customResponse;
+                console.log("Using custom response:", response);
+            } else if (selectedImage) {
                 // Use multimodal API for image processing
                 response = await runMultiModal(userPrompt, selectedImage);
                 setSelectedImage(null); // Clear image after sending

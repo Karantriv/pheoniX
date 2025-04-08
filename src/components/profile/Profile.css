@@ -25,6 +25,14 @@
   background-color: rgba(0, 0, 0, 0.1);
   padding: 20px;
   transition: background-color 0.3s ease;
+  width: 100%;
+  max-width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-sizing: border-box;
 }
 
 .profile-card {
@@ -244,9 +252,36 @@ body.dark-theme .picture-button.test:hover:not(:disabled) {
 
 .profile-actions {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   gap: 15px;
   margin-top: 30px;
+}
+
+.right-actions {
+  display: flex;
+  gap: 15px;
+}
+
+.sign-out-button {
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  background-color: var(--error-color);
+  color: white;
+  border: none;
+}
+
+.sign-out-button:hover:not(:disabled) {
+  background-color: #c62828;
+  transform: translateY(-2px);
+}
+
+.sign-out-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .cancel-button, .save-button {
