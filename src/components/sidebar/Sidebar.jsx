@@ -8,8 +8,18 @@ import { useNavigate } from 'react-router-dom'
 const Sidebar = () => {
     const navigate = useNavigate()
     const [extended,setExtended] = useState(false)
-    const {onSent, prevPrompts, setRecentPrompt, newChat, chatHistory, loadChat, activeChat, setInput} = useContext(Context)
-    const { logout } = useAuth()
+    const {
+        onSent, 
+        prevPrompts, 
+        setRecentPrompt, 
+        newChat, 
+        chatHistory, 
+        loadChat, 
+        activeChat, 
+        setInput,
+        isLoadingChats
+    } = useContext(Context)
+    const { logout, currentUser } = useAuth()
      
     const loadPrompt = async(prompt) =>{
         setRecentPrompt(prompt)
@@ -46,7 +56,7 @@ const Sidebar = () => {
     }
 
     return (
-        <div className = 'sidebar'>
+        <div className={`sidebar ${extended ? '' : 'collapsed'}`}>
             <div className="top">
                 <img onClick={()=>setExtended(prev=>!prev) }src= {assets.menu_icon} alt="" className="menu" />
                 <div onClick={()=>newChat()}className="new-chat">
@@ -55,9 +65,18 @@ const Sidebar = () => {
                 </div>
                 {extended && (
                     <>
-                        {chatHistory.length > 0 && (
+                        {isLoadingChats ? (
                             <div className="recent">
-                                <p className="recent-title">Chat History</p>
+                                <p className="recent-title">Loading chats...</p>
+                                <div className="chat-loader">
+                                    <div className="loader-dot"></div>
+                                    <div className="loader-dot"></div>
+                                    <div className="loader-dot"></div>
+                                </div>
+                            </div>
+                        ) : chatHistory.length > 0 ? (
+                            <div className="recent">
+                                <p className="recent-title">Chat History (Last 5)</p>
                                 {chatHistory.map((chat) => (
                                     <div 
                                         key={chat.id} 
@@ -69,7 +88,12 @@ const Sidebar = () => {
                                     </div>
                                 ))}
                             </div>
-                        )}
+                        ) : currentUser ? (
+                            <div className="recent">
+                                <p className="recent-title">No chat history</p>
+                                <p className="no-chats-message">Start a new chat to see it here</p>
+                            </div>
+                        ) : null}
                     </>
                 )}     
             </div> 

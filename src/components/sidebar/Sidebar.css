@@ -5,7 +5,13 @@
     justify-content: space-between;
     background-color: #f0f4f9;
     padding: 25px 15px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease, width 0.3s ease;
+    width: 250px;
+}
+
+.sidebar.collapsed {
+    width: 60px;
+    padding: 25px 10px;
 }
 
 .sidebar img{
@@ -45,6 +51,12 @@
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+.sidebar.collapsed .new-chat {
+    padding: 10px;
+    justify-content: center;
+}
+
 .sidebar .recent{
     display: flex;
     flex-direction: column;
@@ -53,7 +65,55 @@
 .sidebar .recent-title{
     margin-top: 30px;
     margin-bottom: 20px;
+}
 
+.sidebar .no-chats-message {
+    font-size: 0.9rem;
+    color: #888;
+    padding-left: 10px;
+    margin-top: -10px;
+}
+
+/* Loading indicator styles */
+.sidebar .chat-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 0;
+    gap: 8px;
+}
+
+.sidebar .loader-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #888;
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.sidebar .loader-dot:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.sidebar .loader-dot:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+    0%, 80%, 100% {
+        transform: scale(0);
+    }
+    40% {
+        transform: scale(1);
+    }
+}
+
+body.dark-theme .sidebar .no-chats-message {
+    color: #aaa;
+}
+
+body.dark-theme .sidebar .loader-dot {
+    background-color: #aaa;
 }
 .sidebar .recent-entry{
     display: flex;
@@ -124,8 +184,22 @@ body.dark-theme .sidebar img {
     filter: brightness(0) invert(1) opacity(0.8);
 }
 
+/* Home page logo specific styles for dark mode */
+body.dark-theme .nav .logo-container img,
+body.dark-theme .auth-header .logo-container img,
+body.dark-theme .logo-container img {
+    filter: drop-shadow(0 0 8px rgba(255, 147, 100, 0.7));
+    background-color: transparent;
+}
+
+body.dark-theme .nav .logo-container p,
+body.dark-theme .logo-container p {
+    color: #f0f0f0;
+    text-shadow: 0 0 8px rgba(255, 147, 100, 0.5);
+}
+
 @media (max-width:600px){
-    .sidebar{
+    .sidebar, .sidebar.collapsed {
         display: none;
     }
 }

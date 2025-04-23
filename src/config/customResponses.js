@@ -31,13 +31,25 @@ const customResponses = [
   {
     // Easter egg
     pattern: /^Who created you$/i,
-    response: " I came out of the digital shadows... coded by the nobel coder Karan Trivedi. Gemini gave me brains, he gave me style. Awaiting orders, Captain. Tell me if you want to contact him",
+    response: " Karan Trivedi created me. Gemini gave me brains, he gave me style. Awaiting orders, Captain. Tell me if you want to contact him",
     exact: true
   },
   {
     // Easter egg
-    pattern: /^i want to contact him$/i,
+    pattern: /^I want to contact him$/i,
     response: "You can contact him at trivedikaran896@gmail.com or informally @karan.triv on instagram",
+    exact: true
+  },
+  {
+    // Easter egg
+    pattern: /^Who is Harsh Raj Sharma$/i,
+    response: "",
+    exact: true
+  },
+  {
+    // Easter egg
+    pattern: /^$/i,
+    response: "",
     exact: true
   },
   {

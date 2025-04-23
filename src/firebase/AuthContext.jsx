@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState, useRef } from 'react';
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -12,6 +12,7 @@ import {
 import { auth, storage, db } from './config';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { dispatchUserChangeEvent } from './userEvent';
 
 const AuthContext = createContext();
 
@@ -23,27 +24,84 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [userProfilePic, setUserProfilePic] = useState(null);
+  const previousUserIdRef = useRef(null);
 
   async function signup(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
+    try {
+      const result = await createUserWithEmailAndPassword(auth, email, password);
+      // Track the user ID for authentication change
+      localStorage.setItem('currentUserId', result.user.uid);
+      return result;
+    } catch (error) {
+      console.error("Signup error:", error);
+      throw error;
+    }
   }
 
-  function login(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
+  async function login(email, password) {
+    try {
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      // Track the user ID for authentication change
+      localStorage.setItem('currentUserId', result.user.uid);
+      return result;
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
   }
 
-  function loginWithGoogle() {
-    const googleprovider = new GoogleAuthProvider();
-    return signInWithPopup(auth, googleprovider);
+  async function loginWithGoogle() {
+    try {
+      const googleprovider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, googleprovider);
+      // Track the user ID for authentication change
+      localStorage.setItem('currentUserId', result.user.uid);
+      return result;
+    } catch (error) {
+      console.error("Google login error:", error);
+      throw error;
+    }
   }
 
-  function loginWithGithub() {
-    const githubprovider = new GithubAuthProvider();
-    return signInWithPopup(auth, githubprovider);
+  async function loginWithGithub() {
+    try {
+      const githubprovider = new GithubAuthProvider();
+      const result = await signInWithPopup(auth, githubprovider);
+      // Track the user ID for authentication change
+      localStorage.setItem('currentUserId', result.user.uid);
+      return result;
+    } catch (error) {
+      console.error("GitHub login error:", error);
+      throw error;
+    }
   }
 
-  function logout() {
-    return signOut(auth);
+  async function logout() {
+    try {
+      // Save the current user ID before logout
+      const oldUserId = auth.currentUser?.uid;
+      
+      // Clear all user-related data from localStorage
+      localStorage.removeItem('userProfilePic');
+      localStorage.removeItem('userName');
+      localStorage.removeItem('currentUserId');
+      
+      // Sign out from Firebase
+      await signOut(auth);
+      
+      // Reset user states
+      setCurrentUser(null);
+      setUserProfilePic(null);
+      
+      // Dispatch a user change event to notify components
+      dispatchUserChangeEvent(oldUserId, null);
+      
+      console.log("User logged out successfully");
+      return true;
+    } catch (error) {
+      console.error("Error during logout:", error);
+      throw error;
+    }
   }
 
   async function uploadProfilePicture(file, userId) {
@@ -164,6 +222,29 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      // Get previous user ID from ref
+      const oldUser = previousUserIdRef.current;
+      const newUser = user?.uid || null;
+      
+      // Detect user change
+      if (oldUser !== newUser) {
+        console.log(`Auth state changed: ${oldUser || 'none'} -> ${newUser || 'none'}`);
+        
+        // Update tracking
+        previousUserIdRef.current = newUser;
+        
+        // Dispatch user change event
+        dispatchUserChangeEvent(oldUser, newUser);
+        
+        // Update localStorage
+        if (newUser) {
+          localStorage.setItem('currentUserId', newUser);
+        } else {
+          localStorage.removeItem('currentUserId');
+        }
+      }
+      
+      // Update user state
       setCurrentUser(user);
       
       if (user) {

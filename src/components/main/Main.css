@@ -592,7 +592,7 @@ body.dark-theme .main .card p {
 body.dark-theme .main .cards .card img {
   background-color: #3a3a3a;
   filter: brightness(5);
-  opacity: 1;
+  opacity: 0;
   box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
   
 }

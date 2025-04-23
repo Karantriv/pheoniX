@@ -1,9 +1,8 @@
 import { createContext, useState, useEffect, useCallback, useRef } from "react";
 import runChat, { runMultiModal, resetChat } from "../config/gemini";
 import { getCustomResponse } from "../config/customResponses";
-import { saveChat, getUserChats, cleanupOldChats, migrateUserChats } from "../firebase/ChatService";
+import { saveChat, getUserChats, cleanupOldChats } from "../firebase/ChatService";
 import { useAuth } from "../firebase/AuthContext";
-import { addUserChangeListener } from "../firebase/userEvent";
 
 export const Context = createContext();
 
@@ -23,7 +22,6 @@ const ContextProvider = (props) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [isDarkTheme, setIsDarkTheme] = useState(false);
     const [isLoadingChats, setIsLoadingChats] = useState(false);
-    const [isMigrating, setIsMigrating] = useState(false);
     
     // Use a ref to track the current user ID to detect changes without causing re-renders
     const currentUserIdRef = useRef(null);
@@ -37,69 +35,6 @@ const ContextProvider = (props) => {
         setShowResult(false);
         resetChat();
     }, []);
-
-    // Function to load chats for a specific user
-    const loadUserChatData = useCallback(async (userId) => {
-        if (!userId) {
-            console.log("Cannot load chats: No user ID provided");
-            resetAllChatData();
-            return;
-        }
-        
-        try {
-            setIsLoadingChats(true);
-            console.log("Loading chats for user:", userId);
-            
-            // Try to migrate old chats if needed
-            await migrateUserChats(userId);
-            
-            // Get user chats from their container
-            const userChats = await getUserChats(userId);
-            
-            if (userChats && userChats.length > 0) {
-                // Sort chats by timestamp (newest first)
-                const sortedChats = userChats.sort((a, b) => {
-                    return new Date(b.timestamp) - new Date(a.timestamp);
-                });
-                
-                setChatHistory(sortedChats);
-                console.log(`Loaded ${sortedChats.length} chats for user ${userId}`);
-            } else {
-                // Reset chat history if no chats found for this user
-                setChatHistory([]);
-                console.log(`No chats found for user ${userId}`);
-            }
-        } catch (error) {
-            console.error("Error loading user chats:", error);
-            setChatHistory([]);
-        } finally {
-            setIsLoadingChats(false);
-        }
-    }, [resetAllChatData]);
-
-    // Handle user change events
-    useEffect(() => {
-        // Function to handle user change event
-        const handleUserChange = (oldUserId, newUserId) => {
-            console.log(`User change detected in Context: ${oldUserId || 'none'} -> ${newUserId || 'none'}`);
-            
-            // Clear chat data and reset state
-            resetAllChatData();
-            
-            // If new user exists, load their chats
-            if (newUserId) {
-                loadUserChatData(newUserId);
-            }
-        };
-        
-        // Add user change event listener
-        const removeListener = addUserChangeListener(handleUserChange);
-        
-        // Cleanup on unmount
-        return () => {
-            removeListener();
-        };
-    }, [resetAllChatData, loadUserChatData]);
 
     // Get user initials from their name - memoized for performance
     const getUserInitials = useCallback(() => {
@@ -155,16 +90,43 @@ const ContextProvider = (props) => {
                 
                 // Update the ref with the new user ID
                 currentUserIdRef.current = newUserId;
-                
-                // If there's a new user, load their chats
-                if (newUserId) {
-                    await loadUserChatData(newUserId);
+            }
+            
+            // If there's a logged in user, load their chats
+            if (newUserId) {
+                try {
+                    setIsLoadingChats(true);
+                    console.log("Loading chats for user:", newUserId);
+                    const userChats = await getUserChats(newUserId);
+                    
+                    if (userChats && userChats.length > 0) {
+                        // Sort chats by timestamp (newest first)
+                        const sortedChats = userChats.sort((a, b) => {
+                            return new Date(b.timestamp) - new Date(a.timestamp);
+                        });
+                        
+                        setChatHistory(sortedChats);
+                        console.log(`Loaded ${sortedChats.length} chats for user ${newUserId}`);
+                    } else {
+                        // Reset chat history if no chats found for this user
+                        setChatHistory([]);
+                        console.log(`No chats found for user ${newUserId}`);
+                    }
+                } catch (error) {
+                    console.error("Error loading user chats:", error);
+                    setChatHistory([]);
+                } finally {
+                    setIsLoadingChats(false);
                 }
+            } else {
+                // Clear chat history when no user is logged in
+                setChatHistory([]);
+                console.log("No user logged in, cleared chat history");
             }
         };
 
         loadUserChats();
-    }, [currentUser, resetAllChatData, loadUserChatData]);
+    }, [currentUser, resetAllChatData]);
 
     // Apply theme whenever isDarkTheme changes
     useEffect(() => {
@@ -403,8 +365,7 @@ const ContextProvider = (props) => {
         removeImage,
         isDarkTheme,
         toggleTheme,
-        isLoadingChats,
-        isMigrating
+        isLoadingChats
     };
 
     return (

@@ -8,6 +8,7 @@ import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
 import Profile from "./components/profile/Profile";
 import LandingPage from "./components/landing/LandingPage";
+import ChatServiceTester from "./firebase/ChatServiceTester";
 import "./App.css";
 
 const PrivateRoute = ({ children }) => {
@@ -36,6 +37,11 @@ const App = () => {
               <Profile />
             </PrivateRoute>
           }/>
+          <Route path="/chat-test" element={
+            <PrivateRoute>
+              <ChatServiceTester />
+            </PrivateRoute>
+          }/>
         </Routes>
       </Router>
     </AuthProvider>
@@ -43,3 +49,4 @@ const App = () => {
 }
 
 export default App
+     

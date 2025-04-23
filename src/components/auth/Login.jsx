@@ -2,13 +2,13 @@ import React, { useState, useContext, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../firebase/AuthContext";
 import { Context } from "../../context/Context";
-import PhoenixWings from "../main/PhoenixWings";
+import ThreeBackground from "../landing/ThreeBackground";
 import "./Auth.css";
 import phoenixLogo from "../../assets/gemini_icon.png";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login, loginWithGoogle, loginWithGithub } = useAuth();
+  const { login, loginWithGoogle, loginWithGithub, logout, currentUser } = useAuth();
   const { setUserName } = useContext(Context);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -135,16 +135,35 @@ const Login = () => {
     }
   };
 
+  // Handle signout
+  const handleSignOut = async () => {
+    try {
+      await logout();
+      // Redirect to landing page
+      navigate('/');
+    } catch (error) {
+      console.error("Error signing out:", error);
+      // Display error if needed
+    }
+  };
+
   return (
     <div className="auth-page">
-      <PhoenixWings />
+      <ThreeBackground />
       
-      <header className="auth-header">
-        <div className="logo-container" onClick={() => navigate('/')}>
-          <img src={phoenixLogo} alt="Phoenix Logo" className="header-logo" />
-          <h1>Phoenix</h1>
-        </div>
-      </header>
+      <div className="auth-header-wrapper">
+        <header className="auth-header">
+          <div className="logo-container" onClick={() => navigate('/')}>
+            <img src={phoenixLogo} alt="Phoenix Logo" className="header-logo" />
+            <h1>Phoenix</h1>
+          </div>
+          {currentUser && (
+            <button className="auth-signout-button" onClick={handleSignOut}>
+              Sign Out
+            </button>
+          )}
+        </header>
+      </div>
       
       <div className="auth-container">
         <div className="auth-form-container">
@@ -232,7 +251,7 @@ const Login = () => {
               onClick={handleGithubSignIn}
               disabled={loading}
             >
-              <img src="https://img.icons8.com/ios-filled/50/000000/github.png" alt="GitHub" />
+              <img src="https://img.icons8.com/ios-filled/50/FFFFFF/github.png" alt="GitHub" />
               Sign in with GitHub
             </button>
           </div>
