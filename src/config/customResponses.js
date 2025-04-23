@@ -66,7 +66,7 @@ const customResponses = [
   },
   {
     // Easter egg
-    pattern: /^How can I contact kavya ?$/i,
+    pattern: /^How can I contact kavya?$/i,
     response: "My owner doesn't want you to contact her mind your own business creep",
     exact: true
   }

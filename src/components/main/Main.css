@@ -335,11 +335,11 @@ body.dark-theme .user-initials {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    align-self: flex-start;
+    align-self: flex-end;
     max-width: 80%;
-    background-color: #f0f4f9;
+    background-color: #e5eeff;
     padding: 15px;
-    border-radius: 15px 15px 15px 0;
+    border-radius: 15px 15px 0 15px;
 }
 
 .result-title p {
@@ -356,11 +356,11 @@ body.dark-theme .user-initials {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    align-self: flex-end;
+    align-self: flex-start;
     max-width: 80%;
-    background-color: #e5eeff;
+    background-color: #f0f4f9;
     padding: 15px;
-    border-radius: 15px 15px 0 15px;
+    border-radius: 15px 15px 15px 0;
 }
 
 .loader{
@@ -618,11 +618,13 @@ body.dark-theme .mic-container img {
 }
 
 body.dark-theme .result-title {
-  background-color: #292929;
+  background-color: #3b3b3b;
+  color: #ffffff;
 }
 
 body.dark-theme .result-data {
-  background-color: #2d3748;
+  background-color: #2a2a2a;
+  color: #ffffff;
 }
 
 body.dark-theme .remove-image-btn {

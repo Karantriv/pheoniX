@@ -219,7 +219,7 @@ const Login = () => {
                 /> 
                 Remember me
               </label>
-              <a href="/forgot-password" className="forgot-link">Forgot Password?</a>
+              <Link to="/forgot-password" className="forgot-link">Forgot Password?</Link>
             </div>
             
             <button type="submit" className="auth-button" disabled={loading}>

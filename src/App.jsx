@@ -6,6 +6,7 @@ import { AuthProvider, useAuth } from './firebase/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
+import ForgotPassword from "./components/auth/ForgotPassword";
 import Profile from "./components/profile/Profile";
 import LandingPage from "./components/landing/LandingPage";
 import ChatServiceTester from "./firebase/ChatServiceTester";
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/home" element={
             <PrivateRoute>
               <div className="protected-container">

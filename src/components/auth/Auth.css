@@ -245,6 +245,11 @@
   text-decoration: underline;
 }
 
+.phone-input select:hover {
+  background-color: #0a0a0a;
+  color: #f0f0f0;
+}
+
 .auth-button {
   padding: 0.9rem;
   background: linear-gradient(135deg, #4a80f0, #775cf9);
@@ -488,4 +493,20 @@
 .profile-picture-section .picture-actions .direct,
 input[type="file"] {
   display: none !important;
+}
+
+.success-message {
+  text-align: center;
+  margin: 1rem 0;
+  padding: 0.7rem;
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #4caf50;
+  border-radius: 6px;
+  border-left: 3px solid #4caf50;
+}
+
+body.dark-theme .success-message {
+  background-color: rgba(76, 175, 80, 0.05);
+  color: #81c784;
+  border-left: 3px solid #81c784;
 } 

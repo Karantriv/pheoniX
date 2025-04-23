@@ -7,7 +7,8 @@ import {
   GithubAuthProvider,
   signOut,
   onAuthStateChanged,
-  updateProfile
+  updateProfile,
+  sendPasswordResetEmail
 } from 'firebase/auth';
 import { auth, storage, db } from './config';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -220,6 +221,16 @@ export function AuthProvider({ children }) {
     }
   }
 
+  async function resetPassword(email) {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      return { success: true };
+    } catch (error) {
+      console.error("Password reset error:", error);
+      throw error;
+    }
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       // Get previous user ID from ref
@@ -268,7 +279,8 @@ export function AuthProvider({ children }) {
     loginWithGithub,
     logout,
     uploadProfilePicture,
-    getProfilePicture
+    getProfilePicture,
+    resetPassword
   };
 
   return (

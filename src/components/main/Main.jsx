@@ -267,17 +267,27 @@ const Main = () => {
         : <div className='result'>
           {currentChat.map((message, index) => (
             <div key={index} className={message.role === 'user' ? "result-title" : "result-data"}>
-              {message.role === 'user' ? (
+              {message.role === 'model' ? (
+                <img src={assets.gemini_icon} alt="Phoenix" />
+              ) : (
                 profilePic ? (
                   <img src={profilePic} alt={userName} className="user-profile-pic" />
                 ) : (
                   <div className="user-initials">{getUserInitials()}</div>
                 )
-              ) : (
-                <img src={assets.gemini_icon} alt="Phoenix" />
               )}
               <div className="message-content">
-                {message.role === 'user' ? (
+                {message.role === 'model' ? (
+                  index === currentChat.length - 1 && loading ? (
+                    <div className='loader'>
+                      <hr />
+                      <hr />
+                      <hr />
+                    </div>
+                  ) : (
+                    <p dangerouslySetInnerHTML={{__html: index === currentChat.length - 1 ? resultData : message.content}}></p>
+                  )
+                ) : (
                   <>
                     <p>{message.content}</p>
                     {message.hasImage && message.imageUrl && (
@@ -290,16 +300,6 @@ const Main = () => {
                       </div>
                     )}
                   </>
-                ) : (
-                  index === currentChat.length - 1 && loading ? (
-                    <div className='loader'>
-                      <hr />
-                      <hr />
-                      <hr />
-                    </div>
-                  ) : (
-                    <p dangerouslySetInnerHTML={{__html: index === currentChat.length - 1 ? resultData : message.content}}></p>
-                  )
                 )}
               </div>
             </div>
